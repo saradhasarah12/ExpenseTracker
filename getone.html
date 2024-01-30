@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getone</title>
+</head>
+<body>
+    Enter Expense Name:
+    <input type="text" name="ename" id="ename">
+    <br>
+    <input type="button" value="getone" id="getone">
+    <p id="res"> </p>
+    <script>
+        const getone = document.getElementById('getone');
+        const ename = document.getElementById('ename');
+        const result = document.getElementById('res');
+
+        getone.addEventListener('click', () => {
+            if (ename.value == "") {
+                result.innerText = "Please enter ename!!";
+            } else {
+                fetch(`http://localhost:9000/api/ExpenseTracker/${ename.value}`)
+                    .then(res => res.json())
+                    .then(res => {
+                        result.innerText = JSON.stringify(res);
+                    })
+                    .catch(error => {
+                        result.innerText = `Error fetching data: ${error.message}`;
+                        console.error(error);
+                    });
+                ename.value = "";
+            }
+        });
+    </script>
+</body>
+</html>

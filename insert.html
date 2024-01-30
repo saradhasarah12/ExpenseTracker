@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert</title>
+</head>
+<body>
+    <form>
+        Desc <input type="text" name="ename" id="ename"> <br>
+        Price <input type="number" name="amount" id="amount"> <br>
+        <input type="button" name="insert" value="insert" id="insert"> <br>
+    </form>
+    <p id="res"></p>
+    
+</body>
+
+<script>
+    const ename = document.getElementById('ename');
+    const amount = document.getElementById('amount');
+    const insert = document.getElementById('insert');
+    const result = document.getElementById('res')
+
+
+    insert.addEventListener('click',()=>{
+        var data = {
+            ename: ename.value,
+            amount: parseInt(amount.value),
+        }
+        fetch('http://localhost:9000/api/ExpenseTracker',{
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json; chatset=UTF-8'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => {return res.json()})
+        .then(res => {result.innerText = JSON.stringify(res)});
+        ename.value=''
+        amount.value=''
+})
+</script>
+</html>

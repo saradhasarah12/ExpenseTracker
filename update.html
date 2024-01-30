@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update</title>
+</head>
+
+<body>
+    <form id="updateForm">
+        Ename: <input type="text" name="ename" id="ename"><br>
+        Amount: <input type="number" name="amount" id="amount"><br>
+        <input type="button" value="update" id="update">
+        <p id="res"></p>
+    </form>
+
+    <script>
+        const updateForm = document.getElementById('updateForm');
+        const update = document.getElementById('update');
+        const result = document.getElementById('res');
+        const ename = document.getElementById('ename');
+        const amount = document.getElementById('amount');
+
+        update.addEventListener('click', () => {
+            if (ename.value.trim() === "" || amount.value.trim() === "") {
+                result.innerText = "Check ename and amount";
+            } else {
+                fetch(`http://localhost:9000/api/ExpenseTracker/${encodeURIComponent(ename.value.trim())}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        amount: parseInt(amount.value.trim(), 10),
+                    }),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    },
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! Status: ${res.status}`);
+                        }
+                        return res.text();
+                    })
+                    .then(res => {
+                        result.innerText = res;
+                    })
+                    .catch(error => {
+                        result.innerText = `Error updating data: ${error.message}`;
+                        console.error(error);
+                    });
+            }
+            ename.value=""
+            amount.value=""
+        });
+
+        updateForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            return false;
+
+
+        });
+    </script>
+</body>
+
+</html>
